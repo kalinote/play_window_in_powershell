@@ -1,0 +1,2 @@
+# play_window_in_powershell
+在powershell中画几个窗口玩玩
