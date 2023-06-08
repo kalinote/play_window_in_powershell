@@ -1,33 +1,36 @@
+from typing import List, Tuple
+
+
 class Window:
-    def __init__(self, title, x_pos, y_pos, width, heigth, background, set_bar=True) -> None:
-        self.title = title
-        self.x_pos = x_pos
-        self.y_pos = y_pos
-        self.set_bar = set_bar
+    def __init__(self, title: str, x_pos: int, y_pos: int, width: int, heigth: int, background: str, set_bar: bool = True) -> None:
+        self.title: str = title
+        self.x_pos: int = x_pos
+        self.y_pos: int = y_pos
+        self.set_bar: bool = set_bar
 
         if not self.set_bar:
-            self.width = width
-            self.heigth = heigth
+            self.width: int = width
+            self.heigth: int = heigth
 
-            self.is_show = False
-            self.vbuffer = []
+            self.is_show: bool = False
+            self.vbuffer: List[List[str]] = []
             for i in range(self.heigth):
                 self.vbuffer.append([background] * self.width)
 
         else:
-            self.width = width+2
-            self.heigth = heigth+4
+            self.width: int = width+2
+            self.heigth: int = heigth+4
 
-            self.is_show = False
-            self.vbuffer = []
+            self.is_show: bool = False
+            self.vbuffer: List[List[str]] = []
             for i in range(self.heigth):
                 if i == 0 :
                     self.vbuffer.append(['┌'] + ['─'] * (self.width-2) + ['┐'])
                 elif i == 1:
                     if len(title) > self.width - 7:
-                        show_title = list(title[:self.width - 10]) + ['.','.','.']
+                        show_title: List[str] = list(title[:self.width - 10]) + ['.','.','.']
                     else:
-                        show_title = list(title)
+                        show_title: List[str] = list(title)
                     
                     self.vbuffer.append(['│'] + show_title + [' ']*(self.width-len(show_title)-7) + list('- * x│'))
                 elif i == 2:
@@ -37,13 +40,13 @@ class Window:
                 else:
                     self.vbuffer.append(['│'] + [background] * (self.width-2) + ['│'])
 
-    def show(self):
+    def show(self) -> None:
         self.is_show = True
 
-    def hide(self):
+    def hide(self) -> None:
         self.is_show = False
 
-    def draw_line(self, start_pos, end_pos, char='*'):
+    def draw_line(self, start_pos: Tuple[int, int], end_pos: Tuple[int, int], char: str='*') -> None:
         x1, y1 = start_pos
         x2, y2 = end_pos
         dx = abs(x2 - x1)
@@ -55,7 +58,7 @@ class Window:
         if dx > dy:
             err = dx / 2.0
             while x != x2:
-                self.vbuffer[y][x] = char
+                self.vbuffer[y][x] = char[0]
                 err -= dy
                 if err < 0:
                     y += sy
@@ -64,10 +67,13 @@ class Window:
         else:
             err = dy / 2.0
             while y != y2:
-                self.vbuffer[y][x] = char
+                self.vbuffer[y][x] = char[0]
                 err -= dx
                 if err < 0:
                     x += sx
                     err += dy
                 y += sy
 
+    def draw_point(self, pos: Tuple[int, int], char: str='*') -> None:
+        x, y = pos
+        self.vbuffer[y][x] = char[0]
